@@ -7,10 +7,40 @@ class Prog {
 	static void Main(string[] args) {
 		Prog p = new Prog();
 		bool program = true;
-		foreach (string arg in args) {
-			if (arg == "-l") {
+		for (int i = 0; i < args.Length; i++) {
+			if (args[i] == "-l") {
 				p.showNotes();
 				program = false;
+			}
+			if (args[i] == "-d") {
+				if (i+1 >= args.Length) { Console.WriteLine("Error. No note name provided."); }
+				else { 
+					string? fileName = args[i+1]; 
+					if (File.Exists(Path.Combine(notesPath, fileName))) {
+						File.Delete(Path.Combine(notesPath, fileName));
+						Console.WriteLine(fileName + " deleted.");
+					}
+					else { Console.WriteLine("doesnt exist."); }
+				}
+				program = false;
+			}
+			if (args[i] == "-help" || args[i] == "--help" || args[i] == "-h") {
+				Console.WriteLine("Run with no arguments to open app.\n-d <noteName> will delete the note.\n-e <noteName> will give you a prompt to change the contents of the note you named.\n-help writes this message.");
+				program = false;
+			}
+			if (args[i] == "-e") {
+                if (i+1 >= args.Length) { Console.WriteLine("Error. No note name provided."); }
+                else {
+					string? fileName = args[i+1];
+					if (File.Exists(Path.Combine(notesPath, fileName))) {
+			    		Console.Write("\nNew Content\n> ");
+					    string? newCont = Console.ReadLine();
+			   	 		p.WriteFile(newCont, notesPath, fileName, true);
+						p.showNotes();
+						program = false;
+					}
+					else { Console.WriteLine(fileName + " doesnt exist."); }
+                }
 			}
 		}
 		if (program) {
@@ -55,19 +85,23 @@ class Prog {
 		}
 	}
 
-	public void WriteFile(string? con, string? loc, string? filename) {
-		string? path = loc + "/" + filename;
-		string? [] files = Directory.GetFiles(notesPath);
-		if (files.Contains(notesPath + "/" + filename)) {
-			Console.Write("\nError. File exists. Overwrite?\nY/N: ");
-			string? yn = Console.ReadLine();
-			if (yn.Contains("Y") || yn.Contains("y")) {
-				File.WriteAllText(path,con);
-			}
-		}
-		else {
-			File.WriteAllText(path, con);
-		}
+	public void WriteFile(string? con, string? loc, string? filename, bool ignoreOverwrite = false) {
+		string? path = Path.Combine(loc, filename);
+        if (!ignoreOverwrite) {
+		    if (File.Exists(notesPath + "/" + filename)) {
+	    		Console.Write("\nError. File exists. Overwrite?\nY/N: ");
+	    		string? yn = Console.ReadLine();
+		    	if (yn.Contains("Y") || yn.Contains("y")) {
+	    			File.WriteAllText(path,con);
+	    		}
+    		}
+	    	else {
+		    	File.WriteAllText(path, con);
+	    	}
+        }
+	    else {
+		    File.WriteAllText(path, con);
+	    }
 	}
 	public void showNotes() {
 		if (!Directory.Exists(notesPath)) {
