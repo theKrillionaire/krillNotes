@@ -123,8 +123,9 @@ class Prog {
 	}
 
 	public void loadConf() {
-		string confName = ".noterc";
-		string confFile = Path.Combine(home, confName);
+        string confDir = ".config/krillNotes";
+		string confName = "noteConf";
+		string confFile = Path.Combine(home, confDir, confName);
 		if (File.Exists(confFile)) {
 			foreach (string line in File.ReadLines(confFile)) {
 				if (line.Contains("=")) {
@@ -140,6 +141,7 @@ class Prog {
 			}
 		}
 		else {
+            Directory.CreateDirectory(Path.Combine(home, confDir));
 			File.WriteAllText(confFile, "nameColour=Red\ncontColour=Blue\nnotesPath=.notes");
 		}
 	}
