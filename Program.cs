@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Newtonsoft.Json;
 
 class Prog {
     static string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
