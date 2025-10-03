@@ -12,10 +12,10 @@ Commands:
 
 Configuration:
   Config is saved to `/home/<username>/.config/krillNotes/noteConf` or `C:/Users/<username>/.config/krillNotes/noteConf`.
-  `nameColour=Red' is the default note name colour.
-  `contColour=Blue' is the default note content colour.
+  `nameColour=Red` is the default note name colour.
+  `contColour=Blue` is the default note content colour.
   `dateColour=Magenta` is the default note date colour.
-  `notesPath=.notes' is the default note path. change this to a folder name (will save to `/home/<username>/<notesPath>` or `C:/Users/<username>/<notesPath`.
+  `notesPath=.notes` is the default note path. change this to a folder name (will save to `/home/<username>/<notesPath>` or `C:/Users/<username>/<notesPath`.
   `showDate=false` is the default value for showing the date. false doesnt show, true shows.
 
 Colors:
