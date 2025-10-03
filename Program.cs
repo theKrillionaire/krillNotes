@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 class Prog {
@@ -101,7 +101,7 @@ class Prog {
 	public void WriteFile(string? con, string? loc, string? filename, bool ignoreOverwrite = false) {
 		string? path = Path.Combine(loc, filename);
         if (!ignoreOverwrite) {
-		    if (File.Exists(Path.combine(notesPath, filename))) {
+		    if (File.Exists(Path.Combine(notesPath, filename))) {
 	    		Console.Write("\nError. File exists. Overwrite?\nY/N: ");
 	    		string? yn = Console.ReadLine();
 		    	if (yn.Contains("Y") || yn.Contains("y")) {
