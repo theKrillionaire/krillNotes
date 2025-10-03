@@ -25,7 +25,7 @@ class Prog {
 				program = false;
 			}
 			if (args[i] == "-help" || args[i] == "--help" || args[i] == "-h") {
-				Console.WriteLine("Run with no arguments to open app.\n-d <noteName> will delete the note.\n-e <noteName> will give you a prompt to change the contents of the note you named.\n-help writes this message.");
+				Console.WriteLine("Run with no arguments to open app.\n-d <noteName> will delete the note.\n-e <noteName> will give you a prompt to change the contents of the note you named.\n-l prints all notes without opening app.\n-help writes this message.");
 				program = false;
 			}
 			if (args[i] == "-e") {
