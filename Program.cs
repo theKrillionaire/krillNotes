@@ -25,7 +25,7 @@ class Prog {
 				program = false;
 			}
 			if (args[i] == "-help" || args[i] == "--help" || args[i] == "-h") {
-				Console.WriteLine("Run with no arguments to open app.\n-d <noteName> will delete the note.\n-e <noteName> will give you a prompt to change the contents of the note you named.\n-l prints all notes without opening app.\n-help writes this message.");
+				Console.WriteLine("Run with no arguments to open app.\n-d <noteName> will delete the note.\n-e <noteName> will give you a prompt to change the contents of the note you named.\n-l prints all notes without opening app.\n-a <noteName> \"<noteContents>\" to add a note without opening the CLI.\n-help writes this message.");
 				program = false;
 			}
 			if (args[i] == "-e") {
@@ -41,6 +41,16 @@ class Prog {
 					}
 					else { Console.WriteLine(fileName + " doesnt exist."); }
                 }
+			}
+			if (args[i] == "-add") {
+				if (i+2 >= args.Length) { Console.WriteLine("Error. No note name and/or content provided"); program = false; }
+				else {
+					string? fileName = args[i+1];
+					string? fileCont = string.Join(" ", args.Skip(i+2));
+					p.WriteFile(fileCont, notesPath, fileName);
+					p.showNotes();
+					program = false;
+				}
 			}
 		}
 		if (program) {
@@ -72,7 +82,6 @@ class Prog {
 		    		Console.Write($"{name}\n> ");
 		    		string? cont = Console.ReadLine();
 	    			WriteFile(cont, notesPath, name);
-		    		Console.WriteLine(Directory.GetFiles(notesPath));
                     exit = true;
 		    		break;
 		    	}
