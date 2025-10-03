@@ -101,7 +101,7 @@ class Prog {
 	public void WriteFile(string? con, string? loc, string? filename, bool ignoreOverwrite = false) {
 		string? path = Path.Combine(loc, filename);
         if (!ignoreOverwrite) {
-		    if (File.Exists(notesPath + "/" + filename)) {
+		    if (File.Exists(Path.combine(notesPath, filename))) {
 	    		Console.Write("\nError. File exists. Overwrite?\nY/N: ");
 	    		string? yn = Console.ReadLine();
 		    	if (yn.Contains("Y") || yn.Contains("y")) {
