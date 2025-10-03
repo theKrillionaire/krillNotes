@@ -13,48 +13,56 @@ class Prog {
 		bool program = true;
 		p.loadConf();
 		for (int i = 0; i < args.Length; i++) {
-			if (args[i] == "-l") { p.showNotes(); program = false; }
-			if (args[i] == "-d") {
-				if (i+1 >= args.Length) { Console.WriteLine("Error. No note name provided."); }
-				else { 
-					string? fileName = args[i+1]; 
-					if (File.Exists(Path.Combine(notesPath, fileName))) {
-						File.Delete(Path.Combine(notesPath, fileName));
-						Console.WriteLine(fileName + " deleted.");
-					}
-					else { Console.WriteLine("doesnt exist."); }
-				}
-				program = false;
-			}
-			if (args[i] == "-help" || args[i] == "--help" || args[i] == "-h") {
-				Console.WriteLine("Run with no arguments to open app.\n-d <noteName> will delete the note.\n-e <noteName> will give you a prompt to change the contents of the note you named.\n-l prints all notes without opening app.\n-a <noteName> \"<noteContents>\" to add a note without opening the CLI.\n-help writes this message.");
-				program = false;
-			}
-			if (args[i] == "-e") {
-                if (i+1 >= args.Length) { Console.WriteLine("Error. No note name provided."); }
-                else {
-					string? fileName = args[i+1];
-					if (File.Exists(Path.Combine(notesPath, fileName))) {
-			    		Console.Write("\nNew Content\n> ");
-					    string? newCont = Console.ReadLine();
-			   	 		p.WriteFile(newCont, notesPath, fileName, true);
-						p.showNotes();
-						program = false;
-					}
-					else { Console.WriteLine(fileName + " doesnt exist."); }
-                }
-			}
-			if (args[i] == "-add" || args[i] == "-a") {
-				if (i+2 >= args.Length) { Console.WriteLine("Error. No note name and/or content provided"); program = false; }
-				else {
-					string? fileName = args[i+1];
-					string? fileCont = string.Join(" ", args.Skip(i+2));
-					p.WriteFile(fileCont, notesPath, fileName);
+            var arg = args[i];
+            switch (arg) {
+				case "-l":
 					p.showNotes();
 					program = false;
-				}
+					break;
+				case "-d":
+					if (i+1 >= args.Length) { Console.WriteLine("Error. No note name provided."); }
+					else {
+						string? fileName = args[i+1];
+						if (File.Exists(Path.Combine(notesPath, fileName))) {
+							File.Delete(Path.Combine(notesPath,fileName));
+							Console.WriteLine("Deleted " + fileName);
+						}
+						else { Console.WriteLine("No such note."); }
+					}
+					program = false;
+					break;
+				case "-help":
+				case "-h":
+		    		Console.WriteLine("Run with no arguments to open app.\n-d <noteName> will delete the note.\n-e <noteName> will give you a prompt to change the contents of the note you named.\n-l prints all notes without opening app.\n-a <noteName> \"<noteContents>\" to add a note without opening the CLI.\n-help writes this message.");
+			    	program = false;
+                    break;
+                case "-e":
+                   if (i+1 >= args.Length) { Console.WriteLine("Error. No note name provided."); }
+                  else {
+				    	string? fileName = args[i+1];
+		    			if (File.Exists(Path.Combine(notesPath, fileName))) {
+			        		Console.Write("\nNew Content\n> ");
+				    	    string? newCont = Console.ReadLine();
+			       	 		p.WriteFile(newCont, notesPath, fileName, true);
+			    			p.showNotes();
+				    		program = false;
+			    		}
+			    		else { Console.WriteLine(fileName + " doesnt exist."); }
+                 }
+				  break;
+                case "-a":
+				case "-add":
+		    		if (i+2 >= args.Length) { Console.WriteLine("Error. No note name and/or content provided"); program = false; }
+		    		else {
+		    			string? fileName = args[i+1];
+			    		string? fileCont = string.Join(" ", args.Skip(i+2));
+			    		p.WriteFile(fileCont, notesPath, fileName);
+				    	p.showNotes();
+					program = false;
+				    }
+                    break;
 			}
-		}
+        }
 		if (program) { p.Start(); }
 	}
 	public void Start() {
