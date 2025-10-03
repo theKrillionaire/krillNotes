@@ -1,17 +1,18 @@
 ﻿using System;
 using System.IO;
+using Newtonsoft.Json;
 
 class Prog {
     static string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-    static string notesPath = home + "/.notes";
+    static string notesPath = Path.Combine(home, ".notes");
+	static ConsoleColor nameColour = ConsoleColor.Red;
+	static ConsoleColor contColour = ConsoleColor.Blue;
 	static void Main(string[] args) {
 		Prog p = new Prog();
 		bool program = true;
+		p.loadConf();
 		for (int i = 0; i < args.Length; i++) {
-			if (args[i] == "-l") {
-				p.showNotes();
-				program = false;
-			}
+			if (args[i] == "-l") { p.showNotes(); program = false; }
 			if (args[i] == "-d") {
 				if (i+1 >= args.Length) { Console.WriteLine("Error. No note name provided."); }
 				else { 
@@ -42,7 +43,7 @@ class Prog {
 					else { Console.WriteLine(fileName + " doesnt exist."); }
                 }
 			}
-			if (args[i] == "-add") {
+			if (args[i] == "-add" || args[i] == "-a") {
 				if (i+2 >= args.Length) { Console.WriteLine("Error. No note name and/or content provided"); program = false; }
 				else {
 					string? fileName = args[i+1];
@@ -53,21 +54,15 @@ class Prog {
 				}
 			}
 		}
-		if (program) {
-			p.Start();
-		}
+		if (program) { p.Start(); }
 	}
 	public void Start() {
 		while(true) {
             showNotes();
 			Console.Write("\n\nMake new Note?\nY/N: ");
 			string? i = Console.ReadLine();
-			if (i.Contains("y") || i.Contains("Y")) {
-				MakeNote();
-			}
-			else {
-				break;
-			}
+			if (i.Contains("y") || i.Contains("Y")) { MakeNote(); }
+			else { break; }
 		}
 	}
 
@@ -120,11 +115,34 @@ class Prog {
 		string? [] files = Directory.GetFiles(notesPath);
 		Console.WriteLine("Notes:");
 		foreach (var f in files) {
-			Console.ForegroundColor = ConsoleColor.Red;
+			Console.ForegroundColor = nameColour;
 			Console.WriteLine(Path.GetFileName(f) + ":");
-			Console.ForegroundColor = ConsoleColor.Blue;
+			Console.ForegroundColor = contColour;
 			Console.WriteLine("  " + File.ReadAllText(f));
 			Console.ResetColor();
 		}
 	}
+
+	public void loadConf() {
+		string confName = ".noterc";
+		string confFile = Path.Combine(home, confName);
+		if (File.Exists(confFile)) {
+			foreach (string line in File.ReadLines(confFile)) {
+				if (line.Contains("=")) {
+					string[] parts = line.Split('=', 2);
+					string key = parts[0].Trim();
+					string value = parts[1].Trim();
+					if (Enum.TryParse<ConsoleColor>(value, out ConsoleColor parsedColor)) {
+						if (key == "nameColour") { nameColour = parsedColor; }
+						if (key == "contColour") { contColour = parsedColor; }
+					}
+					if (key == "notesPath") { notesPath = Path.Combine(home, value); }
+				}
+			}
+		}
+		else {
+			File.WriteAllText(confFile, "nameColour=Red\ncontColour=Blue\nnotesPath=.notes");
+		}
+	}
 }
+
