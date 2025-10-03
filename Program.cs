@@ -6,6 +6,8 @@ class Prog {
     static string notesPath = Path.Combine(home, ".notes");
 	static ConsoleColor nameColour = ConsoleColor.Red;
 	static ConsoleColor contColour = ConsoleColor.Blue;
+	static ConsoleColor dateColour = ConsoleColor.Yellow;
+	static bool showDate = false;
 	static void Main(string[] args) {
 		Prog p = new Prog();
 		bool program = true;
@@ -118,6 +120,11 @@ class Prog {
 			Console.WriteLine(Path.GetFileName(f) + ":");
 			Console.ForegroundColor = contColour;
 			Console.WriteLine("  " + File.ReadAllText(f));
+			if (showDate) {
+				Console.ForegroundColor = dateColour;
+				FileInfo FInfo = new FileInfo(f);
+				Console.WriteLine("Created: " + FInfo.CreationTime);
+			}
 			Console.ResetColor();
 		}
 	}
@@ -135,6 +142,11 @@ class Prog {
 					if (Enum.TryParse<ConsoleColor>(value, out ConsoleColor parsedColor)) {
 						if (key == "nameColour") { nameColour = parsedColor; }
 						if (key == "contColour") { contColour = parsedColor; }
+						if (key == "dateColour") { dateColour = parsedColor; }
+					}
+                    bool parsedBool = false;
+					if (bool.TryParse(value, out parsedBool)) {
+						if (key == "showDate") { showDate = parsedBool; }
 					}
 					if (key == "notesPath") { notesPath = Path.Combine(home, value); }
 				}
@@ -142,7 +154,7 @@ class Prog {
 		}
 		else {
             Directory.CreateDirectory(Path.Combine(home, confDir));
-			File.WriteAllText(confFile, "nameColour=Red\ncontColour=Blue\nnotesPath=.notes");
+			File.WriteAllText(confFile, "nameColour=Red\ncontColour=Blue\nshowDate=false\ndateColour=Magenta\nnotesPath=.notes");
 		}
 	}
 }
