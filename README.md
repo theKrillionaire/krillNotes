@@ -16,7 +16,7 @@ Configuration:
   `contColour=Blue` is the default note content colour.
   `dateColour=Magenta` is the default note date colour.
   `notesPath=.notes` is the default note path. change this to a folder name (will save to `/home/<username>/<notesPath>` or `C:/Users/<username>/<notesPath`.
-  `showDate=false` is the default value for showing the date. false doesnt show, true shows.
+  `showDate=false` is the default value for showing the date. false doesnt show, verbose will show the full date info. long will show the month name, day name, and year. short will show `mm/dd/yy`.
 
 Colors:
   Black, DarkBlue, DarkGreen, DarkCyan, DarkRed, DarkMagenta, DarkYellow, Gray, DarkGray, Blue, Green, Cyan, Red, Magenta, Yellow, White 

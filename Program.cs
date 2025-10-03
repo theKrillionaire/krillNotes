@@ -7,7 +7,7 @@ class Prog {
 	static ConsoleColor nameColour = ConsoleColor.Red;
 	static ConsoleColor contColour = ConsoleColor.Blue;
 	static ConsoleColor dateColour = ConsoleColor.Yellow;
-	static bool showDate = false;
+	static string showDate = "verbose";
 	static void Main(string[] args) {
 		Prog p = new Prog();
 		bool program = true;
@@ -120,10 +120,12 @@ class Prog {
 			Console.WriteLine(Path.GetFileName(f) + ":");
 			Console.ForegroundColor = contColour;
 			Console.WriteLine("  " + File.ReadAllText(f));
-			if (showDate) {
+			if (showDate != "false") {
 				Console.ForegroundColor = dateColour;
 				FileInfo FInfo = new FileInfo(f);
-				Console.WriteLine("Created: " + FInfo.CreationTime);
+				if (showDate == "verbose") { Console.WriteLine("  Created: " + FInfo.CreationTime); }
+				else if (showDate == "short") { Console.WriteLine("  Created: " + FInfo.CreationTime.ToShortDateString()); }
+				else if (showDate == "long") { Console.WriteLine("  Created: " + FInfo.CreationTime.ToLongDateString()); }
 			}
 			Console.ResetColor();
 		}
@@ -144,10 +146,7 @@ class Prog {
 						if (key == "contColour") { contColour = parsedColor; }
 						if (key == "dateColour") { dateColour = parsedColor; }
 					}
-                    bool parsedBool = false;
-					if (bool.TryParse(value, out parsedBool)) {
-						if (key == "showDate") { showDate = parsedBool; }
-					}
+                    if (key == "showDate") { showDate = value; }
 					if (key == "notesPath") { notesPath = Path.Combine(home, value); }
 				}
 			}
