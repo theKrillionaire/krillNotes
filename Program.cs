@@ -7,6 +7,7 @@ class Prog {
 	static ConsoleColor nameColour = ConsoleColor.Red;
 	static ConsoleColor contColour = ConsoleColor.Blue;
 	static ConsoleColor dateColour = ConsoleColor.Yellow;
+	static ConsoleColor sepeColour = ConsoleColor.Gray;
 	static string showDate = "verbose";
 	static void Main(string[] args) {
 		Prog p = new Prog();
@@ -22,7 +23,7 @@ class Prog {
 				case "-d":
 					if (i+1 >= args.Length) { Console.WriteLine("Error. No note name provided."); }
 					else {
-						string? fileName = args[i+1];
+						string? fileName = string.Join(" ",args[i+1]);
 						if (File.Exists(Path.Combine(notesPath, fileName))) {
 							File.Delete(Path.Combine(notesPath,fileName));
 							Console.WriteLine("Deleted " + fileName);
@@ -52,14 +53,11 @@ class Prog {
 				  break;
                 case "-a":
 				case "-add":
-		    		if (i+2 >= args.Length) { Console.WriteLine("Error. No note name and/or content provided"); program = false; }
-		    		else {
-		    			string? fileName = args[i+1];
-			    		string? fileCont = string.Join(" ", args.Skip(i+2));
-			    		p.WriteFile(fileCont, notesPath, fileName);
-				    	p.showNotes();
+                    string? addFileName = args[i+1];
+			    	string? fileCont = string.Join(" ", args.Skip(i+2));
+			    	p.WriteFile(fileCont, notesPath, addFileName);
+				    p.showNotes();
 					program = false;
-				    }
                     break;
 			}
         }
@@ -82,7 +80,7 @@ class Prog {
 			string? name = Console.ReadLine();
             while(true) {
 	    		if (!string.IsNullOrWhiteSpace(name)) {
-		    		Console.Clear();
+		    		drawSeperator();
 		    		Console.Write($"{name}\n> ");
 		    		string? cont = Console.ReadLine();
 	    			WriteFile(cont, notesPath, name);
@@ -90,7 +88,7 @@ class Prog {
 		    		break;
 		    	}
 		    	else {
-		    		Console.Clear();
+		    		drawSeperator();
 		    		Console.WriteLine("Error. Filename cant be null.");
 		    	}
             }
@@ -120,7 +118,7 @@ class Prog {
 		if (!Directory.Exists(notesPath)) {
 				Directory.CreateDirectory(notesPath);
 		}
-        Console.Clear();
+        drawSeperator();
 		string? [] files = Directory.GetFiles(notesPath);
 		Console.WriteLine("Notes:");
 		foreach (var f in files) {
@@ -153,6 +151,7 @@ class Prog {
 						if (key == "nameColour") { nameColour = parsedColor; }
 						if (key == "contColour") { contColour = parsedColor; }
 						if (key == "dateColour") { dateColour = parsedColor; }
+						if (key == "sepeColour") { sepeColour = parsedColor; }
 					}
                     if (key == "showDate") { showDate = value; }
 					if (key == "notesPath") { notesPath = Path.Combine(home, value); }
@@ -161,8 +160,15 @@ class Prog {
 		}
 		else {
             Directory.CreateDirectory(Path.Combine(home, confDir));
-			File.WriteAllText(confFile, "nameColour=Red\ncontColour=Blue\nshowDate=false\ndateColour=Magenta\nnotesPath=.notes");
+			File.WriteAllText(confFile, "nameColour=Red\ncontColour=Blue\nshowDate=false\ndateColour=Magenta\nnotesPath=.notes\nsepeColour=Gray");
 		}
+	}
+	static void drawSeperator() {
+		int screenWidth = Console.WindowWidth;
+		Console.ForegroundColor = sepeColour;
+        Console.WriteLine("\n" + new string('#', Console.WindowWidth));
+		Console.Write("\n");
+		Console.ResetColor();
 	}
 }
 
